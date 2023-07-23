@@ -3,8 +3,8 @@ package main
 import "math/rand"
 
 type CrystalStructure struct {
-	ID   int
-	Name string
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func NewCrystralStructure(name string) *CrystalStructure {

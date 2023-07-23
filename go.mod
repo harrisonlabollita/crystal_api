@@ -1,4 +1,4 @@
-module github.com/harrisonlabollita/minearl_data_api
+module github.com/harrisonlabollita/crystal_data_api
 
 go 1.19
 
