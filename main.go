@@ -2,6 +2,10 @@ package main
 
 func main() {
 	port := ":3000"
-	server := NewAPIServer(port)
+
+    database := BuildCrystalData()
+
+	server := NewAPIServer(port, database)
+
 	server.Run()
 }
