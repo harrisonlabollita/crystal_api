@@ -1,11 +1,14 @@
 package main
 
+import (
+        "github.com/harrisonlabollita/crystal_api/api"
+        "github.com/harrisonlabollita/crystal_api/config"
+)
+
 func main() {
-	port := ":3000"
 
-    database := BuildCrystalData()
+    cfg := config.LoadConfig()
 
-	server := NewAPIServer(port, database)
-
-	server.Run()
+    apiServer := api.NewAPI(cfg)
+    apiServer.Run()
 }
