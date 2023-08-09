@@ -1,4 +1,2 @@
-*txt
-bin/
-*json
+*db
 __pycache__
