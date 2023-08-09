@@ -7,7 +7,9 @@ import shutil
 
 import sqlite3
 
-DATA_PATH: str = "cif/cifdata.txt" # encoded in latin1
+PATH = __file__.split('/')[0]
+
+DATA_PATH: str = PATH + "/cif/cifdata.txt" # encoded in latin1
 URL : str = "http://rruff.geo.arizona.edu/AMS/zipped_files/cif_archive_2023_07_30.zip"
 
 def fetch_data() -> None:
@@ -15,14 +17,14 @@ def fetch_data() -> None:
     response = requests.get(URL)
     if response.status_code == 200:
         print('fetch successful...writing zip file')
-        with open('data.zip', 'wb') as file: file.write(response.content)
+        with open(PATH+'/data.zip', 'wb') as file: file.write(response.content)
     print('unzipping data to dir cif')
-    with zipfile.ZipFile('data.zip',  'r') as zipref: zipref.extractall('cif')
+    with zipfile.ZipFile(PATH+'/data.zip',  'r') as zipref: zipref.extractall(PATH+'/cif')
 
 def cleanup() -> None:
     print('cleaning up from bootstrap...')
-    if os.path.isfile('data.zip'): os.remove('data.zip')
-    if os.path.isdir('cif'): shutil.rmtree('cif')
+    if os.path.isfile(PATH+'/data.zip'): os.remove(PATH+'/data.zip')
+    if os.path.isdir(PATH+'/cif'): shutil.rmtree(PATH+'/cif')
 
 
 def build_database() -> None:
@@ -33,7 +35,7 @@ def build_database() -> None:
     lines = file.readlines()
     file.close()
 
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(PATH+'/database.db')
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -62,6 +64,7 @@ def build_database() -> None:
             if "cell_volume" in line: volume = float(line.split()[-1])
             if "symmetry_space_group_name" in line: 
                 sgroup = line.split("symmetry_space_group_name_H-M")[-1].strip().replace(",", "").replace("'", "")
+                sgroup = "".join(sgroup.split())
             if "chemical_formula_sum" in line:
                 line = line.replace("(", "").replace(")", "").replace("'", "")
                 atoms = list(map(lambda x : "".join([s.replace('.', '') for s in x if not s.isnumeric() ]), line.split()[1:]))
