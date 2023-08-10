@@ -8,6 +8,7 @@ import shutil
 import sqlite3
 
 PATH = __file__.split('/')[0]
+print(PATH)
 
 DATA_PATH: str = PATH + "/cif/cifdata.txt" # encoded in latin1
 URL : str = "http://rruff.geo.arizona.edu/AMS/zipped_files/cif_archive_2023_07_30.zip"
@@ -17,9 +18,11 @@ def fetch_data() -> None:
     response = requests.get(URL)
     if response.status_code == 200:
         print('fetch successful...writing zip file')
-        with open(PATH+'/data.zip', 'wb') as file: file.write(response.content)
+        with open(PATH+'/data.zip', 'wb') as file: 
+            file.write(response.content)
     print('unzipping data to dir cif')
-    with zipfile.ZipFile(PATH+'/data.zip',  'r') as zipref: zipref.extractall(PATH+'/cif')
+    with zipfile.ZipFile(PATH+'/data.zip',  'r') as zipref: 
+        zipref.extractall(PATH+'/cif')
 
 def cleanup() -> None:
     print('cleaning up from bootstrap...')

@@ -22,16 +22,18 @@ def get_material_by_id(material_id):
     if material: return jsonify(write_json(material))
     else: return jsonify({'message' : 'Material not found' }), 404
 
-@app.route('/material', methods=['GET'])
-def get_material_by_name():
-    name = request.args.get('name')
+@app.route('/material/<name>', methods=['GET'])
+def get_material_by_name(name):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM materials WHERE name = ?', (name,))
     material = cursor.fetchone()
+    print(material)
     conn.close()
-    if material: jsonify(write_json(material))
-    else: return jsonify({'message' : 'Material not found' }), 404
+    if material: 
+        return jsonify(write_json(material))
+    else: 
+        return jsonify({'message' : 'Material not found' }), 404
 
 @app.route('/materials/', methods=['GET'])
 def query_materials():
@@ -67,8 +69,6 @@ def query_materials():
     for material in materials:
         result.append(write_json(material))
     return jsonify(result)
-
-
 
 
 if __name__ == "__main__":

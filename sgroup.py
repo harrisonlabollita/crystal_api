@@ -29,7 +29,8 @@ SG_NAME = ['P1', 'P-1', 'P2', 'P21', 'C2',
            'I41/amd', 'I41/acd', 'P3', 'P31', 'P32',
            'R3', 'P-3', 'R-3', 'P312', 'P321', 'P3112', 'P3121', 
            'P3212', 'P3221', 'R32', 'P3m1', 'P31m', 'P3c1', 'P31c', 'R3m',
-           'R3c', 'P-31m', 'P-31c', 'P-3m1', 'P-3c1', 'R-3m', 'R-3c', 'P6',                 'P61', 'P65', 'P62', 'P64', 'P63', 'P-6', 'P6/m', 'P63/m',
+           'R3c', 'P-31m', 'P-31c', 'P-3m1', 'P-3c1', 'R-3m', 'R-3c', 'P6',                 
+           'P61', 'P65', 'P62', 'P64', 'P63', 'P-6', 'P6/m', 'P63/m',
            'P622', 'P6122', 'P6522', 'P6222', 'P6422', 'P6322', 'P6mm', 
            'P6cc', 'P63cm', 'P63mc', 'P-6m2', 'P-6c2', 'P-62m', 'P-62c',
            'P6/mmm', 'P6/mcc', 'P63/mcm', 'P63/mmc', 'P23', 'F23', 'I23',
@@ -45,4 +46,3 @@ assert len(SG_NUM) == len(SG_NAME), f" len(SG_NUM) != len(SG_NAME) ({len(SG_NUM)
 
 SG_NUM_TO_NAME = {k : v for k, v in zip(SG_NUM, SG_NAME) }
 SG_NAME_TO_NUM = {v : k for k, v in zip(SG_NUM, SG_NAME) }
-
