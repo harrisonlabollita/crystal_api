@@ -22,8 +22,8 @@ CrystalAPI is a Flask-based API that provides access to a materials database. It
 
 
    ```bash
-   git clone https://github.com/yourusername/CrystalAPI.git
-   cd CrystalAPI
+   git clone https://github.com/harrisonlabollita/crystal_api.git
+   cd crystal_api
    ```
 
 ## Usage
