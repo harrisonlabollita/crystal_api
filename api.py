@@ -66,14 +66,27 @@ def query_materials():
 
     atom  = request.args.get('atom')
     if atom:
-        query += ' AND atoms LIKE ?'
-        params.append(f'%{atom}%')
+        atom_symbols = atom.split(',')
+        atom_conditions = ' OR '.join(['atoms LIKE ?' for _ in atom_symbols])
+        query += f' AND ({atom_conditions})'
+        for symbol in atom_symbols: params.append(f'%{symbol}%')
+
+    cursor.execute(query, params)
+    materials = cursor.fetchall()
+    conn.close()
+
+    result = []
+    for material in materials:
+        result.append(write_json(material))
+    return jsonify(result)
 
     sgroup = request.args.get('sgroup')
     if sgroup:
         sgroup = int(sgroup)
         if sgroup < 1 or sgroup > 230:
-            return jsonify({'message' : 'Invalid space group number' }), 404
+            logging.debug('Invalid space group number')
+            return error_response('Invalid space group number', 404)
+
         query += ' AND sgroup LIKE ?'
         params.append(f'%{SG_NUM_TO_NAME[sgroup]}%')
 
