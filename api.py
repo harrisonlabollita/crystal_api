@@ -1,12 +1,23 @@
+import logging
 from flask import Flask, request, jsonify
 import sqlite3
 
 from sgroup  import SG_NUM_TO_NAME, SG_NAME_TO_NUM
 
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 app = Flask(__name__)
 
 DATABASE = 'data/database.db'
+
+
+def error_response(message, status_code):
+    response = jsonify({'error': message})
+    response.status_code = status_code
+    return response
+
 
 def write_json(response):
     keys = ['id', 'name', 'lattice', 'volume', 'atoms', 'sgroup', 'source']
@@ -19,8 +30,12 @@ def get_material_by_id(material_id):
     cursor.execute('SELECT * FROM materials WHERE id = ?', (material_id,))
     material = cursor.fetchone()
     conn.close()
-    if material: return jsonify(write_json(material))
-    else: return jsonify({'message' : 'Material not found' }), 404
+
+    if material:
+        return jsonify(write_json(material))
+    else:
+        logging.debug('Material not found')
+        return error_response('Material not found', 404)
 
 @app.route('/material/<name>', methods=['GET'])
 def get_material_by_name(name):
@@ -28,12 +43,13 @@ def get_material_by_name(name):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM materials WHERE name = ?', (name,))
     material = cursor.fetchone()
-    print(material)
     conn.close()
-    if material: 
+
+    if material:
         return jsonify(write_json(material))
-    else: 
-        return jsonify({'message' : 'Material not found' }), 404
+    else:
+        logging.debug('Material not found')
+        return error_response('Material not found', 404)
 
 @app.route('/materials/', methods=['GET'])
 def query_materials():
