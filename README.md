@@ -10,7 +10,6 @@ CrystalAPI is a Flask-based API that provides access to a materials database. It
 - [Routes](#routes)
 - [Database](#database)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
