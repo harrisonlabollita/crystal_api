@@ -8,7 +8,6 @@ import shutil
 import sqlite3
 
 PATH = __file__.split('/')[0]
-print(PATH)
 
 DATA_PATH: str = PATH + "/cif/cifdata.txt" # encoded in latin1
 URL : str = "http://rruff.geo.arizona.edu/AMS/zipped_files/cif_archive_2023_07_30.zip"
