@@ -1,8 +1,12 @@
 import os
+
+# materials project
 from api_key import APIKEY
 from mp_api.client import MPRester
 
-import pandas as pd
+# pymatgen
+from pymatgen.core.structure import Structure
+
 
 
 setenv = lambda x, default : int(os.getenv(x)) if os.getenv(x) is not None else default
@@ -16,7 +20,7 @@ mpr = MPRester(APIKEY)
 parse_material_id = lambda x : x.json().split(",")[0].split(":")[-1].strip().replace("\"", "")
 
 # fetch material ids
-def build_key_database(fields=['material_id'], num_chunks=100, chunk_size=100):
+def build_key_database(fields=['material_id'], num_chunks=100, chunk_size=100) -> list[str]:
     m_ids = None
     response = mpr.materials.search(fields=fields,
                                     num_chunks=num_chunks,
@@ -30,7 +34,7 @@ def build_key_database(fields=['material_id'], num_chunks=100, chunk_size=100):
 
 
 # fetch the magnetism data from material ids
-def build_mag_data_from_keys(materials_ids):
+def build_mag_data_from_keys(materials_ids : list[str]) -> dict:
     mag_by_id = lambda x : mpr.magnetism.get_data_by_id(x, fields=['is_magnetic', 'ordering'])
     dmag = list(map(mag_by_id, materials_ids))
 
@@ -40,7 +44,7 @@ def build_mag_data_from_keys(materials_ids):
     return data
 
 # summarize the number of magnetic materials
-def summarize_mag_data(data) -> None:
+def summarize_mag_data(data : dict) -> None:
     is_magnetic, ordering = 0, {}
     for k, v in data.items():
         if v.is_magnetic: is_magnetic += 1
@@ -55,7 +59,7 @@ def summarize_mag_data(data) -> None:
 
 
 # fetch crystal structure from material ids
-def fetch_crystal_structure_from_id(material_ids):
+def fetch_crystal_structure_from_id(material_ids : list[str]) -> dict[str, Structure]:
     structures = list(map(mpr.get_structure_by_material_id, material_ids))
 
     data = {}
