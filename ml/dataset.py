@@ -1,4 +1,5 @@
 import os
+import glob
 
 # materials project
 from api_key import APIKEY
@@ -8,14 +9,36 @@ from mp_api.client import MPRester
 from pymatgen.core.structure import Structure
 
 
-
 setenv = lambda x, default : int(os.getenv(x)) if os.getenv(x) is not None else default
+
+INMP  = setenv('INMP', 0)
+MAG   = setenv('MAG',  0)
 
 QUICK = setenv('QUICK', 0)
 VERB  = setenv('VERB',  0)
 
+
+
 # Materials Project API
 mpr = MPRester(APIKEY)
+
+def find_overlap_of_databases() -> None:
+    def find_struct(x):
+        try:
+            res = mpr.find_structure(x)
+            return res
+        except Exception as e:
+            print(x)
+            return None
+
+    ciffiles = sorted(glob.glob("../data/*.cif"), key = lambda x : int(x.split('_')[1].split('.')[0]))
+    mpids = []
+    for cif in ciffiles:
+        mid = find_struct(cif)
+        if mid: mpids.append(mid)
+
+    print(f"Total structures: {len(ciffiles)}")
+    print(f"Total in MP:      {len(mpids)   } ({(len(mpids)*100/len(ciffiles)):.2f}%)")
 
 parse_material_id = lambda x : x.json().split(",")[0].split(":")[-1].strip().replace("\"", "")
 
@@ -69,11 +92,13 @@ def fetch_crystal_structure_from_id(material_ids : list[str]) -> dict[str, Struc
 
 if __name__ == "__main__":
 
-    if QUICK: mids = build_key_database(num_chunks=1, chunk_size=10)
-    else : mids = build_key_database(num_chunks=100, chunk_size=100)
+    if INMP: find_overlap_of_databases()
 
-    mag_info = build_mag_data_from_keys(mids)
-    if VERB: summarize_mag_data(mag_info)
+    if MAG:
+        if QUICK: mids = build_key_database(num_chunks=1, chunk_size=10)
+        else : mids = build_key_database(num_chunks=100, chunk_size=100)
+        mag_info = build_mag_data_from_keys(mids)
+        if VERB: summarize_mag_data(mag_info)
 
-    structures = fetch_crystal_structure_from_id(mids)
+        structures = fetch_crystal_structure_from_id(mids)
 

@@ -7,7 +7,7 @@ import shutil
 
 import sqlite3
 
-PATH = __file__.split('/')[0]
+PATH = __file__.split('/')[-2]
 
 DATA_PATH: str = PATH + "/cif/cifdata.txt" # encoded in latin1
 URL : str = "http://rruff.geo.arizona.edu/AMS/zipped_files/cif_archive_2023_07_30.zip"
@@ -82,6 +82,7 @@ def build_database() -> None:
             ''', (name, lattice, volume, atoms, sgroup, source)
             )
             ciffile = []
+
     conn.commit()
     conn.close()
 

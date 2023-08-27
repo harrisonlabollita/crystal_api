@@ -1,3 +1,4 @@
 *db
+*.cif
 __pycache__
 api_key.py
